@@ -1,4 +1,4 @@
-alias reload!='. ~/.zshrc'
+alias reload!='cd ~/.dotfiles && git pull && ./script/bootstrap'
 
 alias cls='clear' # Good 'ol Clear Screen command
 

@@ -107,6 +107,7 @@ Plug 'jremmen/vim-ripgrep' " Search regex in project
 Plug 'neomake/neomake'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy filename finder
 Plug 'junegunn/fzf.vim'
+Plug 'PotatoesMaster/i3-vim-syntax' " syntax file for i3 config
 
 " Python
 Plug 'davidhalter/jedi-vim' " Python IDE integration
