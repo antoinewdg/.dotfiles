@@ -11,9 +11,11 @@ def iter_files():
 
 for file_path in iter_files():
     symlink_name = file_path.stem
-    symlink_dir = Path(*file_path.relative_to(DOTFILES_DIR).parts[1:-1]).resolve()
+    symlink_dir = HOME_DIR / Path(*file_path.relative_to(DOTFILES_DIR).parts[1:-1])
     symlink_path = symlink_dir / symlink_name
     backup_path = symlink_dir / (symlink_name + '.backup')
+
+    symlink_dir.mkdir(parents=True, exist_ok=True)
     
     if symlink_path.is_symlink():
         symlink_path.unlink()
