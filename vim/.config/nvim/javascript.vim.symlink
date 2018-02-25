@@ -1,0 +1,20 @@
+" vim:filetype=vim
+
+augroup javascript
+    au!
+    au FileType javascript,typescript,scss,json call OnJsLike()
+augroup END
+
+" vim-jsx 
+let g:jsx_ext_required = 0
+let g:deoplete#num_processes = 1
+
+
+function! OnJsLike()
+  setlocal foldmethod=syntax
+  set tabstop=2 
+  set shiftwidth=2 
+  set expandtab 
+  nnoremap <Leader>bf :Prettier<CR>
+  autocmd BufWritePre <buffer> Prettier
+endfunction

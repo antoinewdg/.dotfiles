@@ -1,0 +1,39 @@
+" vim:filetype=vim
+
+" Files
+nnoremap <Leader>ff :Files<CR> 
+nnoremap <Leader>fr :History<CR> 
+
+" Windows
+nnoremap <Leader>w <C-w>
+nnoremap <Leader>wd <C-w>c
+nnoremap <Leader>wn <C-w>v<C-w>l
+
+" Git
+nnoremap <Leader>gs :Gstatus<CR> 
+nnoremap <Leader>gc :!git checkout<space> 
+nnoremap <Leader>ga :!git add % 
+nnoremap <Leader>gP :!git push
+nnoremap <Leader>gf :!git fetch --all --prune<CR>
+nnoremap <Leader>gF :!git pull<CR>
+nnoremap <Leader>gl :GV --all<CR> 
+
+" Buffer
+nnoremap <Leader>bf gg=G 
+nnoremap <expr> <Leader>bm RenameCurrentBuffer()
+nnoremap <expr> <Leader>bn CreateFileInDir()
+nnoremap <expr> <Leader>bD :Delete
+
+" Other 
+nnoremap <Leader>pf :echo "disabled"<CR>
+
+
+" Functions
+
+function! RenameCurrentBuffer() 
+  return ":Move " . expand('%')
+endfunction
+
+function! CreateFileInDir()
+  return ":edit " . expand('%:h') . '/'
+endfunction
