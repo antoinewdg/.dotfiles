@@ -2,7 +2,7 @@
 
 " Files
 nnoremap <Leader>ff :Denite file_rec<CR> 
-nnoremap <Leader>fr :History<CR> 
+nnoremap <Leader>fr :Denite file_mru<CR> 
 nnoremap <Leader>fg :Denite grep<CR> 
 
 " Windows

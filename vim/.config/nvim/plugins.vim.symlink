@@ -17,7 +17,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'PotatoesMaster/i3-vim-syntax' " syntax file for i3 config
 Plug 'tpope/vim-eunuch' " commands to rename/delete files properly
 Plug 'vim-airline/vim-airline'
-Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' } " Autocomplete
+Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' } " Fuzzy search on everything
+Plug 'Shougo/neomru.vim', { 'do': ':UpdateRemotePlugins' } " Add MRU to denite
 
 " Python
 Plug 'davidhalter/jedi-vim' " Python IDE integration
