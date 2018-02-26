@@ -1,0 +1,11 @@
+[include]
+  path = ~/.gitconfig.local
+
+[push]
+	default = current
+
+[alias]
+  co = checkout
+  coo = !git fetch -ap && git checkout origin/master
+  rb = rebase 
+  rbo = !git fetch -ap && git rebase origin/master
