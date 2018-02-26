@@ -23,7 +23,7 @@ nnoremap <Leader>gl :GV --all<CR>
 nnoremap <Leader>bf gg=G 
 nnoremap <expr> <Leader>bm RenameCurrentBuffer()
 nnoremap <expr> <Leader>bn CreateFileInDir()
-nnoremap <expr> <Leader>bD :Delete
+nnoremap <Leader>bD :Delete<CR>
 
 " Other 
 nnoremap <Leader>pf :echo "disabled"<CR>
