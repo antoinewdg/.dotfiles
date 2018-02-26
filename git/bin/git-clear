@@ -1,0 +1,4 @@
+#usr/bin/env bash
+
+git fetch -ap
+git branch --merged origin/master | egrep -v '(^\*)' | xargs git branch -d
