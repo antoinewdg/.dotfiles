@@ -10,3 +10,4 @@
   rb = rebase 
   rbo = !git fetch -ap && git rebase origin/master
   clear = !~/.dotfiles/git/bin/git-clear
+  s = status
