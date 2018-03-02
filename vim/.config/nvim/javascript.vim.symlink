@@ -7,7 +7,7 @@ augroup END
 
 " vim-jsx 
 let g:jsx_ext_required = 0
-let g:deoplete#num_processes = 1
+" let g:deoplete#num_processes = 1
 
 " neomake
 let g:neomake_typescript_tslint_errorformat = '%EERROR: %f[%l\, %c]: %m,%WWARNING: %f[%l\, %c]: %m' 
@@ -18,5 +18,10 @@ function! OnJsLike()
   set shiftwidth=2 
   set expandtab 
   nnoremap <Leader>bf :Prettier<CR>
-  autocmd BufWritePre <buffer> Prettier
+  nnoremap <Leader>ch :TSDoc<CR>
+  nnoremap <Leader>ct :TSType<CR>
+  nnoremap <Leader>cd :TSDef<CR>
+  nnoremap <Leader>cD :TSDefPreview<CR>
+  nnoremap <Leader>cu :TSRefs<CR>
+  " autocmd BufWritePre <buffer> Prettier
 endfunction
