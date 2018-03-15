@@ -2,7 +2,7 @@
 
 augroup python
     au!
-    au FileType python setlocal equalprg=python3\ -m\ yapf\ --style=/home/toto/.config/yapf/style
+    au FileType python nnoremap <Leader>bf :Yapf<CR>
 augroup END
 
 " jedi-vim 
@@ -14,3 +14,6 @@ let g:jedi#documentation_command = "K"
 let g:jedi#usages_command = "<leader>cn"
 "let g:jedi#completions_command = "<C-Space>"
 let g:jedi#rename_command = "<leader>cr"
+
+" neomake
+let g:neomake_python_python_exe = "python3"

@@ -23,5 +23,4 @@ function! OnJsLike()
   nnoremap <Leader>cd :TSDef<CR>
   nnoremap <Leader>cD :TSDefPreview<CR>
   nnoremap <Leader>cu :TSRefs<CR>
-  " autocmd BufWritePre <buffer> Prettier
 endfunction

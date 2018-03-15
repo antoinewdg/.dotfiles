@@ -1,9 +1,9 @@
 " vim:filetype=vim
 
 " Files
-nnoremap <Leader>ff :Denite file_rec<CR> 
-nnoremap <Leader>fr :Denite file_mru<CR> 
-nnoremap <Leader>fg :Denite grep<CR> 
+nnoremap <Leader>ff :Files<CR>
+nnoremap <Leader>fr :History<CR>
+nnoremap <Leader>fg :Rg<Space>
 
 " Windows
 nnoremap <Leader>w <C-w>
