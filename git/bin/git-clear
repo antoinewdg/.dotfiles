@@ -1,4 +1,9 @@
 #usr/bin/env bash
 
+BRANCH=$1
+if [ -z "$1" ]; then
+  BRANCH=origin/master
+fi
+  
 git fetch -ap
-git branch --merged origin/master | egrep -v '(^\*)' | xargs git branch -d
+git branch --merged $BRANCH | egrep -v '(^\*)' | xargs git branch -d
