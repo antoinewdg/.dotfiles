@@ -28,6 +28,9 @@ nnoremap <Leader>bD :Delete<CR>
 " Other 
 nnoremap <Leader>pf :echo "disabled"<CR>
 
+" Disable Ex-Mode
+nnoremap Q <nop>
+
 
 " Functions
 

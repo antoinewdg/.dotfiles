@@ -17,6 +17,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'PotatoesMaster/i3-vim-syntax' " syntax file for i3 config
 Plug 'tpope/vim-eunuch' " commands to rename/delete files properly
 Plug 'vim-airline/vim-airline'
+Plug 'powerman/vim-plugin-AnsiEsc' " ansi color escape sequences
 
 " Python
 Plug 'davidhalter/jedi-vim' " Python IDE integration
