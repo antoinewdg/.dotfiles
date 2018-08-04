@@ -1,0 +1,47 @@
+{
+    "keyboard.dispatch": "keyCode", // make esc rebinding work
+    "workbench.colorTheme": "Gruvbox Dark (Medium)",
+    "vim.leader": "<space>",
+    "vim.handleKeys": {
+        "<C-k>": false
+    },
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": [ "<leader>", "f", "f" ],
+            "commands": [ "workbench.action.quickOpen" ]
+        },
+        {
+            "before": [ "<leader>", "b", "f" ],
+            "commands": [ "editor.action.formatDocument" ]
+        },
+        {
+            "before": [ "<leader>", "b", "m" ],
+            "commands": [ "fileutils.moveFile" ]
+        },
+        {
+            "before": [ "<leader>", "b", "n" ],
+            "commands": [ "fileutils.newFile" ]
+        },
+        {
+            "before": [ "<leader>", "w", "n" ],
+            "commands": [ "workbench.action.splitEditor" ]
+        },
+        {
+            "before": [ "<leader>", "w", "h" ],
+            "commands": [ "workbench.action.focusLeftGroup" ]
+        },
+        {
+            "before": [ "<leader>", "w", "l" ],
+            "commands": [ "workbench.action.focusRightGroup" ]
+        },
+        {
+            "before": [ "<leader>", "w", "d" ],
+            "commands": [ "workbench.action.closeActiveEditor" ]
+        },
+        {
+            "before": [ "<leader>", "c", "t" ],
+            "commands": [ "editor.action.peekTypeDefinition" ]
+        },
+    ],
+    "workbench.editor.showTabs": false
+}
