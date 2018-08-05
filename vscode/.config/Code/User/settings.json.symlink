@@ -36,12 +36,25 @@
         },
         {
             "before": [ "<leader>", "w", "d" ],
-            "commands": [ "workbench.action.closeActiveEditor" ]
+            "commands": [ "workbench.action.closeEditorsInGroup" ]
         },
         {
             "before": [ "<leader>", "c", "t" ],
             "commands": [ "editor.action.peekTypeDefinition" ]
         },
+        {
+            "before": [ "<leader>", "c", "f" ],
+            "commands": [ "editor.action.openDeclarationToTheSide" ]
+        },
+        {
+            "before": [ "<leader>", "c", "d" ],
+            "commands": [ "editor.action.goToDeclaration" ]
+        },
+        {
+            "before": [ "<leader>", "c", "u" ],
+            "commands": [ "editor.action.referenceSearch.trigger" ]
+        },
     ],
-    "workbench.editor.showTabs": false
+    "workbench.editor.showTabs": false,
+    "git.autofetch": true
 }
