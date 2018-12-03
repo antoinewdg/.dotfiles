@@ -1,6 +1,9 @@
 {
     "keyboard.dispatch": "keyCode", // make esc rebinding work
+    "workbench.activityBar.visible": true,
     "workbench.colorTheme": "Gruvbox Dark (Medium)",
+    "editor.fontFamily": "'SauceCodePro Nerd Front', 'monospace', monospace, 'Droid Sans Fallback'",
+    "editor.fontSize": 13,
     "vim.leader": "<space>",
     "vim.handleKeys": {
         "<C-k>": false
@@ -21,6 +24,10 @@
         {
             "before": [ "<leader>", "b", "n" ],
             "commands": [ "fileutils.newFile" ]
+        },
+        {
+            "before": [ "<leader>", "b", "D" ],
+            "commands": [ "fileutils.removeFile" ]
         },
         {
             "before": [ "<leader>", "w", "n" ],
@@ -54,7 +61,16 @@
             "before": [ "<leader>", "c", "u" ],
             "commands": [ "editor.action.referenceSearch.trigger" ]
         },
+        {
+            "before": [ "<leader>", "c", "r" ],
+            "commands": [ "editor.action.rename" ]
+        },
     ],
     "workbench.editor.showTabs": false,
-    "git.autofetch": true
+    "git.autofetch": true,
+    "editor.minimap.enabled": false,
+    "gitlens.advanced.messages": {
+        "suppressShowKeyBindingsNotice": true
+    },
+    "gitlens.gitExplorer.files.layout": "tree"
 }

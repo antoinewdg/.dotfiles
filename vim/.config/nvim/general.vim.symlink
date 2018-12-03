@@ -10,10 +10,11 @@ set number " show line numbers
 set backupcopy=yes " don't fuck with webpack-dev-server
 set iskeyword+=- " allow dash in words
 let $FZF_DEFAULT_COMMAND = "rg --files --no-ignore --hidden -g '!.git/**' -g '!**/node_modules/**'"
-set tabstop=2 
-set shiftwidth=2 
-set expandtab 
+set tabstop=2
+set shiftwidth=2
+set expandtab
 
+let g:python3_host_prog = "/usr/bin/python3.7"
 
 
 
@@ -22,10 +23,10 @@ set expandtab
 " ======  Settings
 
 " deoplete
-let g:deoplete#enable_at_startup = 1 
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"  
+let g:deoplete#enable_at_startup = 1
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
-" Theme 
+" Theme
 colorscheme gruvbox
 set background=dark    " Setting dark mode
 
@@ -33,15 +34,17 @@ set background=dark    " Setting dark mode
 let g:rg_highlight = 1
 
 " neomake
-call neomake#configure#automake('w')
+call neomake#configure#automake('rw')
 
 " vim-dev-icons
 let g:airline_powerline_fonts = 1
 
 " ====== Other
 
-" Create file parent dir on write if they do not exist
-augroup createDirOnSave
+augroup general
     autocmd!
+    " Create file parent dir on write if they do not exist
     autocmd BufWritePre * if expand("<afile>")!~#'^\w\+:/' && !isdirectory(expand("%:h")) | execute "silent! !mkdir -p ".shellescape(expand('%:h'), 1) | redraw! | endif
+    " Remove useless spaces at the end of the line
+    autocmd BufWritePre * %s/\s\+$//e
 augroup END

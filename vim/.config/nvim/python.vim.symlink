@@ -5,7 +5,8 @@ augroup python
     au FileType python nnoremap <Leader>bf :Yapf<CR>
 augroup END
 
-" jedi-vim 
+" jedi-vim
+let g:jedi#force_py_version = "3.7"
 let g:jedi#completions_enabled = 0
 let g:jedi#goto_command = "<leader>cd"
 let g:jedi#goto_assignments_command = "<leader>cg"
@@ -16,4 +17,5 @@ let g:jedi#usages_command = "<leader>cn"
 let g:jedi#rename_command = "<leader>cr"
 
 " neomake
-let g:neomake_python_python_exe = "python3"
+let g:neomake_python_python_exe = "python3.7"
+let g:neomake_python_pylint_exe = expand("~/.local/bin/pylint")

@@ -1,3 +1,15 @@
 // Place your key bindings in this file to overwrite the defaults
 [
+    {
+        "key": "ctrl+g s",
+        "command": "git.openChange"
+    },
+    {
+        "key": "ctrl+shift+g g",
+        "command": "workbench.view.scm"
+    },
+    {
+        "key": "ctrl+shift+g",
+        "command": "-workbench.view.scm"
+    }
 ]

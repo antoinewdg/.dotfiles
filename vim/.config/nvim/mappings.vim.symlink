@@ -11,30 +11,33 @@ nnoremap <Leader>wd <C-w>c
 nnoremap <Leader>wn <C-w>v<C-w>l
 
 " Git
-nnoremap <Leader>gs :Gstatus<CR> 
-nnoremap <Leader>gc :!git checkout<space> 
-nnoremap <Leader>ga :!git add % 
+nnoremap <Leader>gs :Gstatus<CR>
+nnoremap <Leader>gc :!git checkout<space>
+nnoremap <Leader>ga :!git add %
 nnoremap <Leader>gP :!git push
 nnoremap <Leader>gf :!git fetch --all --prune<CR>
 nnoremap <Leader>gF :!git pull<CR>
-nnoremap <Leader>gl :GV --all<CR> 
+nnoremap <Leader>gl :GV --branches --remotes --tags<CR>
 
 " Buffer
-nnoremap <Leader>bf gg=G 
+nnoremap <Leader>bf gg=G
 nnoremap <expr> <Leader>bm RenameCurrentBuffer()
 nnoremap <expr> <Leader>bn CreateFileInDir()
 nnoremap <Leader>bD :Delete<CR>
 
-" Other 
+" Other
 nnoremap <Leader>pf :echo "disabled"<CR>
 
 " Disable Ex-Mode
 nnoremap Q <nop>
 
+" Macros
+nnoremap <Leader>q @
+
 
 " Functions
 
-function! RenameCurrentBuffer() 
+function! RenameCurrentBuffer()
   return ":Move " . expand('%')
 endfunction
 

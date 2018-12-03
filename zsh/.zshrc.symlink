@@ -7,9 +7,13 @@ plugins=(
   docker-compose
   kubectl
   minikube
+  kops
 )
 
+echo "Source ozsh"
 source $ZSH/oh-my-zsh.sh
+echo "Source ozsh DONE"
+
 
 
 # shortcut to this dotfiles path is $ZSH
