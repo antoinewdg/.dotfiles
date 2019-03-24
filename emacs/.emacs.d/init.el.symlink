@@ -1,0 +1,202 @@
+; -*- mode: Emacs-Lisp;-*-
+;; Package configs
+(require 'package)
+(setq package-enable-at-startup nil)
+(setq package-archives '(("org"   . "http://orgmode.org/elpa/")
+                         ("gnu"   . "http://elpa.gnu.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")))
+(package-initialize)
+
+;; Bootstrap `use-package`
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
+
+;; Minimal UI
+(scroll-bar-mode -1)
+(tool-bar-mode   -1)
+(tooltip-mode    -1)
+(menu-bar-mode   -1)
+
+;; Disable welcome screen
+(setq inhibit-startup-screen t)
+
+(defun rename-file-and-buffer ()
+  "Rename the current buffer and file it is visiting."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (not (and filename (file-exists-p filename)))
+        (message "Buffer is not visiting a file!")
+      (let ((new-name (read-file-name "New name: " filename)))
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (set-visited-file-name new-name t t)))))))
+
+;; Set default font
+(set-face-attribute 'default nil
+                    :family "Hack"
+                    :height 110
+                    :weight 'normal
+                    :width 'normal)
+
+(use-package magit
+  :ensure t
+  :bind (:map magit-mode-map
+	      ("SPC" . nil)
+	 :map magit-stash-mode-map
+	      ("SPC" . nil)
+	 :map magit-status-mode-map
+	      ("SPC" . nil)
+         :map magit-log-mode-map
+              ("SPC" . nil)))
+
+;; Vim mode
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode 1)
+  :bind (:map evil-motion-state-map
+	      ("SPC" . nil)))
+
+(use-package evil-commentary
+  :ensure t
+  :config
+  (evil-commentary-mode))
+
+(use-package evil-magit
+  :ensure t)
+
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode)
+  :config
+  (setq flycheck-python-pycompile-executable "python3.7")
+  (setq flycheck-python-pylint-executable "python3.7"))
+
+(use-package flycheck-pos-tip
+  :ensure t
+  :init (flycheck-pos-tip-mode))
+
+(use-package gruvbox-theme
+  :ensure t
+  :config
+  (load-theme 'gruvbox t))
+
+(use-package smart-mode-line
+  :ensure t
+  :config
+  (smart-mode-line-enable))
+
+;; Helm
+(use-package helm
+  :ensure t
+  :init
+  (setq helm-mode-fuzzy-match t)
+  (setq helm-completion-in-region-fuzzy-match t)
+  (setq helm-candidate-number-list 50))
+
+(use-package projectile
+  :ensure t)
+
+(use-package helm-projectile
+  :ensure t)
+
+;; Which Key
+(use-package which-key
+  :ensure t
+  :init
+  (setq which-key-separator " ")
+  (setq which-key-prefix-prefix "+")
+  :config
+  (which-key-mode))
+
+(use-package blacken
+  :ensure t
+  :init
+  (setq blacken-allow-py36 t)
+  (setq blacken-line-length 95))
+
+(use-package company
+  :ensure t
+  :config
+  (global-company-mode)
+  :bind (:map company-active-map
+	      ("C-n" . 'company-select-next-or-abort)
+	      ("C-p" . 'company-select-previous-or-abort)
+	      ("<tab>" . 'company-complete-selection)
+	      ("<return>" . nil))
+  :init
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
+  (setq company-selection-wrap-around t))
+
+(use-package company-box
+  :ensure t
+  :hook (company-mode . company-box-mode))
+
+(use-package company-jedi
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-jedi))
+  ;; (add-hook 'python-mode-hook '(add-to-list 'company-backends 'company-jedi)))
+
+;; Custom keybinding
+(use-package general
+  :ensure t
+  :config (general-define-key
+    :states '(motion normal visual insert emacs)
+    :prefix "SPC"
+    :non-normal-prefix "M-SPC"
+    ;; "/"   '(counsel-rg :which-key "ripgrep") ; You'll need counsel package for this
+    "TAB" '(switch-to-prev-buffer :which-key "previous buffer")
+    "SPC" '(helm-M-x :which-key "M-x")
+    "pf"  '(helm-find-file :which-key "find files")
+    ;; Buffers
+    "bb"  '(helm-buffers-list :which-key "buffers list")
+    "bf"  '(blacken-buffer :which-key "format buffer")
+    "bn"  '(helm-find-files :which-key "new file")
+    "bm"  '(rename-file-and-buffer :which-key "move current file")
+    ;; Files
+    "ff"  '(helm-projectile-find-file :which-key "find file")
+    ;; Window
+    "wl"  '(windmove-right :which-key "move right")
+    "wh"  '(windmove-left :which-key "move left")
+    "wk"  '(windmove-up :which-key "move up")
+    "wj"  '(windmove-down :which-key "move bottom")
+    "wn"  '(split-window-right :which-key "split right")
+    "wd"  '(delete-window :which-key "delete window")
+    ;; Git
+    "gs"  '(magit-status :which-key "git status")
+    "gl"  '(magit-log-all-branches :which-key "git log")
+    ;; Others
+    "at"  '(ansi-term :which-key "open terminal")
+))
+
+;; Backup files
+(setq backup-directory-alist `(("." . "~/.backup.emacs/")))
+(setq backup-by-copying t)
+
+
+
+
+
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("8d5f22f7dfd3b2e4fc2f2da46ee71065a9474d0ac726b98f647bc3c7e39f2819" "b59d7adea7873d58160d368d42828e7ac670340f11f36f67fa8071dbf957236a" default)))
+ '(package-selected-packages (quote (use-package))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
