@@ -53,6 +53,11 @@
          :map magit-log-mode-map
               ("SPC" . nil)))
 
+(use-package git-gutter
+  :ensure t
+  :config
+  (global-git-gutter-mode +1))
+
 ;; Vim mode
 (use-package evil
   :ensure t
@@ -98,6 +103,9 @@
   (setq helm-completion-in-region-fuzzy-match t)
   (setq helm-candidate-number-list 50))
 
+(use-package helm-rg
+  :ensure t)
+
 (use-package projectile
   :ensure t)
 
@@ -133,9 +141,6 @@
   (setq company-minimum-prefix-length 1)
   (setq company-selection-wrap-around t))
 
-(use-package company-box
-  :ensure t
-  :hook (company-mode . company-box-mode))
 
 (use-package company-jedi
   :ensure t
@@ -146,7 +151,8 @@
 ;; Custom keybinding
 (use-package general
   :ensure t
-  :config (general-define-key
+  :config
+  (general-define-key
     :states '(motion normal visual insert emacs)
     :prefix "SPC"
     :non-normal-prefix "M-SPC"
@@ -161,6 +167,7 @@
     "bm"  '(rename-file-and-buffer :which-key "move current file")
     ;; Files
     "ff"  '(helm-projectile-find-file :which-key "find file")
+    "fg"  '(helm-rg :which-key "RG")
     ;; Window
     "wl"  '(windmove-right :which-key "move right")
     "wh"  '(windmove-left :which-key "move left")
@@ -172,8 +179,12 @@
     "gs"  '(magit-status :which-key "git status")
     "gl"  '(magit-log-all-branches :which-key "git log")
     ;; Others
-    "at"  '(ansi-term :which-key "open terminal")
-))
+    "at"  '(ansi-term :which-key "open terminal"))
+  (general-define-key
+    :states 'normal
+    "]c" '(git-gutter:next-hunk :which-key "next hunk")
+    "[c" '(git-gutter:previous-hunk :which-key "previous hunk"))
+)
 
 ;; Backup files
 (setq backup-directory-alist `(("." . "~/.backup.emacs/")))
