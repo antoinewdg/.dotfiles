@@ -2,7 +2,10 @@
     "keyboard.dispatch": "keyCode", // make esc rebinding work
     "workbench.activityBar.visible": true,
     "workbench.colorTheme": "Gruvbox Dark (Medium)",
-    "editor.fontFamily": "'SauceCodePro Nerd Front', 'monospace', monospace, 'Droid Sans Fallback'",
+    "workbench.colorCustomizations": {
+        "statusBar.background": "#1b7898",
+    },
+    "editor.fontFamily": "Hack",
     "editor.fontSize": 13,
     "vim.leader": "<space>",
     "vim.handleKeys": {
@@ -72,5 +75,16 @@
     "gitlens.advanced.messages": {
         "suppressShowKeyBindingsNotice": true
     },
-    "gitlens.gitExplorer.files.layout": "tree"
+    "gitlens.gitExplorer.files.layout": "tree",
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "files.exclude": {
+        "**/*.pyc": true
+    },
+    "window.zoomLevel": 2,
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "editor.autoClosingBrackets": "never"
 }

@@ -18,26 +18,28 @@ Plug 'PotatoesMaster/i3-vim-syntax' " syntax file for i3 config
 Plug 'tpope/vim-eunuch' " commands to rename/delete files properly
 Plug 'vim-airline/vim-airline'
 Plug 'powerman/vim-plugin-AnsiEsc' " ansi color escape sequences
+Plug 'aserebryakov/vim-todo-lists'
 
 " Python
 Plug 'davidhalter/jedi-vim' " Python IDE integration
 Plug 'zchee/deoplete-jedi'
 Plug 'mindriot101/vim-yapf'
 Plug 'heavenshell/vim-pydocstring'
+Plug 'ambv/black'
 
 " JS / Typescript
-Plug 'pangloss/vim-javascript' 
-Plug 'mxw/vim-jsx' 
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
 Plug 'leafgarland/typescript-vim'
 Plug 'ianks/vim-tsx'
-Plug 'mhartington/nvim-typescript', { 'do': ':UpdateRemotePlugins' } 
+Plug 'mhartington/nvim-typescript', { 'do': ':UpdateRemotePlugins' }
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " SCSS
 Plug 'cakebaker/scss-syntax.vim'
 
 " Theme
-Plug 'morhetz/gruvbox' 
+Plug 'morhetz/gruvbox'
 
 call plug#end()
 

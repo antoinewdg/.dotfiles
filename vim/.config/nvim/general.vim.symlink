@@ -41,6 +41,8 @@ let g:airline_powerline_fonts = 1
 
 " ====== Other
 
+let g:VimTodoListsMoveItems = 0
+
 augroup general
     autocmd!
     " Create file parent dir on write if they do not exist
