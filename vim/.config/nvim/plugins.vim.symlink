@@ -25,7 +25,7 @@ Plug 'davidhalter/jedi-vim' " Python IDE integration
 Plug 'zchee/deoplete-jedi'
 Plug 'mindriot101/vim-yapf'
 Plug 'heavenshell/vim-pydocstring'
-Plug 'ambv/black'
+" Plug 'ambv/black'
 
 " JS / Typescript
 Plug 'pangloss/vim-javascript'
