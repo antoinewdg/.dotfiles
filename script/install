@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+set -euxo pipefail
+
+
+username="toto"
+user_home="/home/$username"
+
+apt install -y \
+  neovim  git exa ripgrep i3-wm i3lock i3blocks j4-dmenu-desktop xautolock \
+  scrot xfce4-terminal suckless-tools numlockx curl redshift-gtk feh wget \
+  xbacklight lm-sensors zsh
+
+# Megasync
+curl https://mega.nz/linux/MEGAsync/Debian_10.0/amd64/megasync-Debian_10.0_amd64.deb > /tmp/megasync.deb
+dpkg -i /tmp/megasync.deb
+apt install --fix-broken
+
+
+# Nerd fonts
+mkdir -p $HOME/.local/share/fonts
+font_names=(SourceCodePro Iosevka Hack Inconsolata)
+
+for font in "${font_names[@]}"; do
+  wget "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.0.0/$font.zip" \
+    -O "/tmp/$font.zip"
+  unzip -o "/tmp/$font.zip" -d "$user_home/.local/share/fonts/"
+  chown "$username" "$user_home/.local/share/fonts/*"
+done
+
+
+# Polybar
+apt install -y build-essential git cmake cmake-data pkg-config python3-sphinx \
+  libcairo2-dev libxcb1-dev libxcb-util0-dev libxcb-randr0-dev libxcb-composite0-dev \
+  python-xcbgen xcb-proto libxcb-image0-dev libxcb-ewmh-dev libxcb-icccm4-dev \
+  libxcb-xkb-dev libxcb-xrm-dev \
+  libxcb-cursor-dev libasound2-dev libpulse-dev i3-wm libjsoncpp-dev libmpdclient-dev \
+  libcurl4-openssl-dev libnl-genl-3-dev
+
+wget "https://github.com/jaagr/polybar/releases/download/3.4.0/polybar-3.4.0.tar" \
+   -O /tmp/polybar.tar
+cd /tmp
+tar xvf polybar.tar
+cd polybar
+mkdir build && cd build && cmake .. && make -j$(nproc)
+cd /tmp/polybar/build/bin
+mv polybar polybar-msg /usr/local/bin
+mv libpoly.a /usr/local/lib
+
+
+# Oh my zsh
+sh -c "$(wget -O- https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh) --unattended"
+
+
+# Neovim
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+nvim +PlugInstall +qall
+nvim +UpdateRemotePlugins +qall
