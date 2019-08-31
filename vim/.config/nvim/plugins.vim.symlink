@@ -19,6 +19,8 @@ Plug 'tpope/vim-eunuch' " commands to rename/delete files properly
 Plug 'vim-airline/vim-airline'
 Plug 'powerman/vim-plugin-AnsiEsc' " ansi color escape sequences
 Plug 'aserebryakov/vim-todo-lists'
+Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
+
 
 " Python
 Plug 'davidhalter/jedi-vim' " Python IDE integration
@@ -32,11 +34,14 @@ Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'leafgarland/typescript-vim'
 Plug 'ianks/vim-tsx'
-Plug 'mhartington/nvim-typescript', { 'do': ':UpdateRemotePlugins' }
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+" Plug 'mhartington/nvim-typescript', { 'do': ':UpdateRemotePlugins' }
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " SCSS
 Plug 'cakebaker/scss-syntax.vim'
+
+" Rust
+Plug 'rust-lang/rust.vim'
 
 " Theme
 Plug 'morhetz/gruvbox'

@@ -19,3 +19,9 @@ let g:jedi#rename_command = "<leader>cr"
 " neomake
 let g:neomake_python_python_exe = "python3.7"
 let g:neomake_python_pylint_exe = expand("~/.local/bin/pylint")
+
+
+augroup rust
+    au!
+    au FileType rust nnoremap <Leader>bf :RustFmt<CR>
+augroup END

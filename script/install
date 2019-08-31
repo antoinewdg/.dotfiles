@@ -7,9 +7,10 @@ username="toto"
 user_home="/home/$username"
 
 apt install -y \
-  neovim  git exa ripgrep i3-wm i3lock i3blocks j4-dmenu-desktop xautolock \
+  neovim  git exa i3-wm i3lock i3blocks j4-dmenu-desktop xautolock \
   scrot xfce4-terminal suckless-tools numlockx curl redshift-gtk feh wget \
-  xbacklight lm-sensors zsh
+  xbacklight lm-sensors zsh fzf docker docker-compose network-manager-openvpn openvpn \
+  yarnpkg
 
 # Megasync
 curl https://mega.nz/linux/MEGAsync/Debian_10.0/amd64/megasync-Debian_10.0_amd64.deb > /tmp/megasync.deb
@@ -57,3 +58,22 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 nvim +PlugInstall +qall
 nvim +UpdateRemotePlugins +qall
+
+# Rust
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rustup.sh
+sh /tmp/rustup.sh -y --no-modify-path
+rm /tmp/rustup.sh
+rustup component add rustfmt --toolchain stable-x86_64-unknown-linux-gnu
+rustup component add rls --toolchain stable-x86_64-unknown-linux-gnu
+rustup component add rustfmt --toolchain nightly-x86_64-unknown-linux-gnu
+rustup component add rls --toolchain nightly-x86_64-unknown-linux-gnu
+
+# Docker
+usermod -aG docker $username
+
+# Python
+git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev \
+  libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev \
+  xz-utils tk-dev libffi-dev liblzma-dev python-openssl git

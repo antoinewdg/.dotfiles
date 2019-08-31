@@ -25,6 +25,9 @@ let g:python3_host_prog = "/usr/bin/python3.7"
 " deoplete
 let g:deoplete#enable_at_startup = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'nightly', 'rls'],
+\ }
 
 " Theme
 colorscheme gruvbox

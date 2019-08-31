@@ -5,8 +5,8 @@
     "workbench.colorCustomizations": {
         "statusBar.background": "#1b7898",
     },
-    "editor.fontFamily": "Hack",
-    "editor.fontSize": 13,
+    "editor.fontFamily": "Iosevka",
+    "editor.fontSize": 12,
     "vim.leader": "<space>",
     "vim.handleKeys": {
         "<C-k>": false
@@ -86,5 +86,18 @@
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "editor.autoClosingBrackets": "never"
+    "editor.autoClosingBrackets": "never",
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[rust]": {
+
+    },
+    "rust-client.channel": "nightly"
 }
