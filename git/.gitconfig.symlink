@@ -10,8 +10,11 @@
 [alias]
   co = checkout
   coo = !git fetch -ap && git checkout origin/master
-  rb = rebase 
+  rb = rebase
+  rbi = rebase -i
+  rbc = rebase --continue
   rbo = !git fetch -ap && git rebase origin/master
   clear = !~/.dotfiles/git/bin/git-clear
+  usb = !~/.dotfiles/git/bin/git-update-stacked-branches
   s = status
   f = fetch -ap

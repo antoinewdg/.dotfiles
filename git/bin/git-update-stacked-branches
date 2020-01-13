@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+
+import sys
+import re
+import subprocess
+
+def _get_arg(index, default):
+    if len(sys.argv) > index:
+        return sys.argv[index]
+    return default
+
+target_branch_name = _get_arg(1, "master")
+
+def _cmd(*args):
+    result = subprocess.run(
+        args,
+        stdout=subprocess.PIPE,
+    )
+    assert result.returncode == 0
+    return result.stdout.decode()
+
+def _cmd_failable(*args):
+    result = subprocess.run(
+        args,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+
+    return result.returncode, result.stdout.decode()
+
+def get_commits():
+    r = _cmd(
+        "git",
+        "rev-list",
+        "--ancestry-path",
+        "origin/{}..HEAD".format(target_branch_name)
+    )
+    return r.split('\n')[:-1][::-1]
+
+def get_commit_title(commit_hash):
+    return _cmd("git", "log", "--format=%s", "-n", "1", commit_hash).strip()
+
+def get_branch_name(commit_hash):
+    description = _cmd("git", "log", "--format=%B", "-n", "1", commit_hash).strip()
+    pattern = r'_branch=(awr/[a-z\-]+)'
+    match = re.findall(pattern, description)
+    if not match:
+        return None
+
+    assert len(match) == 1
+    return match.pop()
+
+
+def get_remote_commit_hash(branch_name):
+    return_code, output = _cmd_failable("git", "rev-parse", "origin/{}".format(branch_name))
+    if return_code == 0:
+        return output.strip()
+    else:
+        return None
+
+
+def main():
+    commits = get_commits()
+    commits_to_push = []
+
+    for commit_hash in commits:
+        title = get_commit_title(commit_hash)
+        branch_name = get_branch_name(commit_hash)
+        if branch_name is not None:
+            commits_to_push.append((commit_hash, branch_name, [title]))
+        else:
+            if commits_to_push:
+                _, branch_name, titles = commits_to_push.pop()
+                titles.append(title)
+                commits_to_push.append((commit_hash, branch_name, titles))
+
+    final_commits_to_push = []
+    for commit_hash, branch_name, titles in commits_to_push:
+
+        if commit_hash == get_remote_commit_hash(branch_name):
+             # the commit is already pushed
+             continue
+
+        print("Push commits:")
+        print("\n".join(('  - ' + t for t in titles)))
+        response = input("to branch {} ? [y/n]".format(branch_name))
+        print()
+
+        if response == 'y':
+            final_commits_to_push.append((commit_hash, branch_name))
+
+    for commit_hash, branch_name in final_commits_to_push:
+        _cmd(
+            "git",
+            "push",
+            "--force-with-lease",
+            "origin",
+            "{}:refs/heads/{}".format(commit_hash, branch_name),
+        )
+
+
+
+
+
+main()
