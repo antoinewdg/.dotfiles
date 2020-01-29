@@ -10,10 +10,15 @@
 [alias]
   co = checkout
   coo = !git fetch -ap && git checkout origin/master
+  cpk = cherry-pick
+  cm = commit
+  cma = commit --amend
+  cmane = commit --amend --no-edit
   rb = rebase
   rbi = rebase -i
   rbc = rebase --continue
   rbo = !git fetch -ap && git rebase origin/master
+  rs = reset
   clear = !~/.dotfiles/git/bin/git-clear
   usb = !~/.dotfiles/git/bin/git-update-stacked-branches
   s = status
