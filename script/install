@@ -10,7 +10,7 @@ apt install -y \
   neovim  git exa i3-wm i3lock i3blocks j4-dmenu-desktop xautolock \
   scrot xfce4-terminal suckless-tools numlockx curl redshift-gtk feh wget \
   xbacklight lm-sensors zsh fzf docker docker-compose network-manager-openvpn openvpn \
-  yarnpkg
+  yarnpkg deluge cifs-utils arandr vlc bridge-utils nmap net-tools dnsutils
 
 # Megasync
 curl https://mega.nz/linux/MEGAsync/Debian_10.0/amd64/megasync-Debian_10.0_amd64.deb > /tmp/megasync.deb

@@ -1,0 +1,11 @@
+; -*- mode: Emacs-Lisp;-*-
+
+;;; Code:
+
+(use-package elpy
+  :defer t
+  :init
+  (add-hook 'python-mode-hook #'elpy-enable)
+  :config
+  (setq elpy-rpc-virtualenv-path 'current)
+  (setq pyvenv-activate "~/projects/cahier-rdv-v2/backend/.venv"))

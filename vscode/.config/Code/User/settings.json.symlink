@@ -99,5 +99,8 @@
     "[rust]": {
 
     },
-    "rust-client.channel": "nightly"
+    "rust-client.channel": "nightly",
+    "[json]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }
