@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+commit_range=$1
+target_branch=$2
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+backup_branch="${current_branch}__backup"
+
+git checkout -b "$backup_branch"
+git branch -d "$current_branch"
+
+git checkout "$target_branch"
+git checkout -b "$current_branch"
+git cherry-pick "$commit_range"
