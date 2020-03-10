@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+
+import sys
+from urllib.parse import urlparse
+
+def main(url):
+    parsed_url = urlparse(url)
+    host = parsed_url.netloc.split('@')[1]
+    credentials = parsed_url.netloc.split('@')[0]
+    user, password = credentials.split(':')
+    print("{} (host)".format(host))
+    print("{} (user)".format(user))
+    print("{} (password)".format(password))
+    print("{} (database)".format(parsed_url.path[1:]))
+
+main(sys.argv[1])
