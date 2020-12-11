@@ -16,7 +16,7 @@ def _cmd(*args):
         args,
         stdout=subprocess.PIPE,
     )
-    assert result.returncode == 0
+    assert result.returncode == 0, ' '.join(args)
     return result.stdout.decode()
 
 def _cmd_failable(*args):
@@ -42,9 +42,10 @@ def get_commit_title(commit_hash):
 
 def get_branch_name(commit_hash):
     description = _cmd("git", "log", "--format=%B", "-n", "1", commit_hash).strip()
-    pattern = r'_branch=(awr/[0-9a-z\-]+)'
+    pattern = r'_branch=([0-9a-z\-/_]+)'
     match = re.findall(pattern, description)
     if not match:
+        print("not match for", description)
         return None
 
     assert len(match) == 1
@@ -76,6 +77,8 @@ def main():
 
     final_commits_to_push = []
     for commit_hash, branch_name, titles in commits_to_push:
+        if branch_name == "skip":
+            continue
 
         if commit_hash == get_remote_commit_hash(branch_name):
              # the commit is already pushed
@@ -93,7 +96,7 @@ def main():
         _cmd(
             "git",
             "push",
-            "--force-with-lease",
+            "--force",
             "origin",
             "{}:refs/heads/{}".format(commit_hash, branch_name),
         )

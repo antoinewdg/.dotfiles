@@ -3,9 +3,14 @@
 
 [core]
   editor = nvim
+  excludesfile = ~/.gitignore-global
+  pager = delta
 
 [push]
 	default = current
+
+[delta]
+  features = side-by-side line-numbers decorations
 
 [alias]
   co = checkout
@@ -20,6 +25,7 @@
   rbc = rebase --continue
   rbo = !git fetch -ap && git rebase origin/master
   rs = reset
+  l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
   clear = !~/.dotfiles/git/bin/git-clear
   usb = !~/.dotfiles/git/bin/git-update-stacked-branches
   s = status
