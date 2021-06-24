@@ -17,7 +17,7 @@ nnoremap <Leader>ga :!git add %
 nnoremap <Leader>gP :!git push
 nnoremap <Leader>gf :!git fetch --all --prune<CR>
 nnoremap <Leader>gF :!git pull<CR>
-nnoremap <Leader>gl :GV --branches --remotes --tags<CR>
+nnoremap <Leader>gl :GV --branches --remotes=origin/awr/* --tags <CR>
 
 " Buffer
 nnoremap <Leader>bf gg=G

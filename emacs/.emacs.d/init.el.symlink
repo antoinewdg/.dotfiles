@@ -1,229 +1,328 @@
-; -*- mode: Emacs-Lisp;-*-
-;; Package configs
-(require 'package)
-(setq package-enable-at-startup nil)
-(setq package-archives '(("org"   . "http://orgmode.org/elpa/")
-                         ("gnu"   . "http://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
-(package-initialize)
+;; Defaults
 
-;; Bootstrap `use-package`
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(require 'use-package)
+(setq inhibit-startup-message t)
 
-;; Minimal UI
 (scroll-bar-mode -1)
-(tool-bar-mode   -1)
-(tooltip-mode    -1)
-(menu-bar-mode   -1)
+(tool-bar-mode -1)
+(tooltip-mode -1)
+(menu-bar-mode -1)
+(set-fringe-mode 0)
 
-;; Disable welcome screen
-(setq inhibit-startup-screen t)
+(setq visible-bell nil)
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-(defun rename-file-and-buffer ()
-  "Rename the current buffer and file it is visiting."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (message "Buffer is not visiting a file!")
-      (let ((new-name (read-file-name "New name: " filename)))
-        (cond
-         ((vc-backend filename) (vc-rename-file filename new-name))
-         (t
-          (rename-file filename new-name t)
-          (set-visited-file-name new-name t t)))))))
+(column-number-mode)
+(global-display-line-numbers-mode 1)
+(dolist (mode-hook '(org-mode-hook term-mode-hook eshell-mode-hook))
+  (add-hook mode-hook (lambda () (display-line-numbers-mode 0))))
 
-;; Set default font
-(set-face-attribute 'default nil
-                    :family "Hack"
-                    :height 110
-                    :weight 'normal
-                    :width 'normal)
+;; Avoid customize writing in this file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file))
+(load custom-file)
 
-(use-package magit
-  :ensure t
-  :bind (:map magit-mode-map
-	      ("SPC" . nil)
-	 :map magit-stash-mode-map
-	      ("SPC" . nil)
-	 :map magit-status-mode-map
-	      ("SPC" . nil)
-         :map magit-log-mode-map
-              ("SPC" . nil)))
 
-(use-package git-gutter
-  :ensure t
+;; Autosave
+(add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
+;; Save on buffer switch
+(defadvice switch-to-buffer (before save-buffer-now activate)
+  (when buffer-file-name (save-buffer)))
+;; Save on window move
+(defadvice other-window (before other-window-now activate)
+  (when buffer-file-name (save-buffer)))
+(defadvice windmove-up (before other-window-now activate)
+  (when buffer-file-name (save-buffer)))
+(defadvice windmove-down (before other-window-now activate)
+  (when buffer-file-name (save-buffer)))
+(defadvice windmove-left (before other-window-now activate)
+  (when buffer-file-name (save-buffer)))
+(defadvice windmove-right (before other-window-now activate)
+  (when buffer-file-name (save-buffer)))
+
+;; Packages
+(require 'package)
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(require 'use-package)
+(custom-set-variables '(use-package-always-ensure t))
+
+;; General
+
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
   :config
-  (global-git-gutter-mode +1))
+  (ivy-mode 1))
 
-;; Vim mode
+(use-package counsel
+  :config (counsel-mode))
+
+(use-package ivy-rich
+  :config (ivy-rich-mode 1))
+
+(use-package helpful
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable))
+
+;; Looks
+
+(set-face-attribute 'default nil :font "Iosevka")
+(load-theme 'tango-dark)
+
+(use-package doom-themes
+  :config
+  (load-theme 'doom-material t))
+
+(use-package doom-modeline
+  :custom
+  (doom-modeline-buffer-modification-icon nil)
+  :config (doom-modeline-mode 1))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+
+
+;; Key binding
+
+(use-package general
+  :config
+  (general-define-key
+   :keymaps 'transient-base-map
+   "<escape>" 'transient-quit-one)
+  (general-define-key
+   :states '(normal emacs)		;
+   :keymaps 'override
+   :prefix "SPC"
+   ;; Git
+   "g s" 'magit-status
+   ;; Project
+   "p p" 'projectile-switch-project
+   "p f" 'projectile-find-file
+   "p s" 'projectile-ripgrep
+   "p l" 'projectile-edit-dir-locals
+   "p a" 'projectile-add-known-project
+   "p D" 'projectile-remove-known-project
+   ;; Buffers
+   "b f" 'format-all-buffer
+   ;; "b f" 'lsp-format-buffer
+   "b b" 'toto/switch-buffer-ignore-special
+   "b B" 'ivy-switch-buffer
+   "b p" 'switch-to-prev-buffer
+   "b m" 'toto/open-messages-buffer
+   ;; Editor
+   "e e" 'toto/reload-init-file
+   "e c" 'toto/edit-emacs-config
+   ;; Tests
+   "t t" 'toto/run-test-at-point
+   ;; Windows
+   "w h" 'windmove-left
+   "w l" 'windmove-right
+   "w d" 'toto/delete-window
+   "w n" 'toto/split-window-right-and-move
+   ;; Code
+   "c d" 'lsp-find-definition
+   "c r" 'lsp-find-references
+   ))
+
+
+
 (use-package evil
-  :ensure t
+  :custom
+  (evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (evil-want-keybinding nil)
   :config
-  (evil-mode 1)
-  :bind (:map evil-motion-state-map
-	      ("SPC" . nil)))
+  (evil-mode 1))
 
-(use-package evil-commentary
-  :ensure t
+(use-package evil-collection
+  :after evil
+  :custom
+  (evil-collection-company-use-tng nil)
   :config
-  (evil-commentary-mode))
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-(use-package evil-magit
-  :ensure t)
+  (evil-collection-init))
 
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode)
-  :config
-  (setq flycheck-python-pycompile-executable "python3.7")
-  (setq flycheck-python-pylint-executable "python3.7"))
+(use-package evil-nerd-commenter
+  :general
+  (:keymaps '(normal visual)
+	    "g c" 'evilnc-comment-or-uncomment-lines))
 
-(use-package flycheck-pos-tip
-  :ensure t
-  :init (flycheck-pos-tip-mode))
+(use-package which-key
+  :config (which-key-mode))
 
-(use-package gruvbox-theme
-  :ensure t
-  :config
-  (load-theme 'gruvbox t))
+(use-package magit)
 
-(use-package smart-mode-line
-  :ensure t
-  :config
-  (smart-mode-line-enable))
+(defun toto/edit-emacs-config ()
+  (interactive)
+  (find-file (expand-file-name "~/.emacs.d/init.el")))
 
-;; Helm
-(use-package helm
-  :ensure t
-  :init
-  (setq helm-mode-fuzzy-match t)
-  (setq helm-completion-in-region-fuzzy-match t)
-  (setq helm-candidate-number-list 50))
+(defun toto/reload-init-file ()
+  (interactive)
+  (load user-init-file))
 
-(use-package helm-rg
-  :ensure t)
+(defun toto/delete-window ()
+  (interactive)
+  (delete-window)
+  (balance-windows))
+
+(defun toto/split-window-right-and-move ()
+  (interactive)
+  (split-window-right)
+  (windmove-right)
+  (balance-windows))
+
+(defun toto/open-messages-buffer ()
+  (interactive)
+  (switch-to-buffer "*Messages*"))
+
+(defun toto/switch-buffer-ignore-special ()
+  (interactive)
+  (let ((ivy-ignore-buffers (append ivy-ignore-buffers `("^\*"))))
+    (ivy-switch-buffer)))
+
+(defun toto/sbt/get-testonly-file (&optional file)
+  "Return FILE formatted in a sbt testOnly command."
+  (--> (or file (file-name-base))
+    (format "testOnly *%s" it)))
+
+(defun toto/sbt/run-test-file (&optional file)
+  (interactive)
+  (sbt-command (toto/sbt/get-testonly-file file)))
+
+(defun toto/sbt/get-testcase-name ()
+  "Get Scala test case nearby point."
+  (save-excursion
+    (let* ((line (thing-at-point 'line t))
+           (on-testcase-p (and (s-contains? "\"" line)
+                               (s-contains? "{\n" line)))
+           (get-testcase-name (lambda (l)
+                                (--> l
+                                  (s-split "\"" it)
+                                  reverse
+				  (cdr it)
+				  reverse
+				  cdr
+				  (string-join it "")))))
+      (if on-testcase-p
+          (funcall get-testcase-name line)
+        (progn
+          (search-backward "{\n")
+          (funcall get-testcase-name (thing-at-point 'line t)))))))
+
+(defun toto/sbt/run-testcase-at-point ()
+  "Run Scala test case at point."
+  (interactive)
+  (--> (toto/sbt/get-testonly-file)
+    (format "%s -- -z \"%s\"" it (toto/sbt/get-testcase-name))
+    sbt-command))
+
+
+(defun toto/run-test-at-point ()
+  (interactive)
+  (toto/sbt/run-testcase-at-point))
+
+
 
 (use-package projectile
-  :ensure t)
-
-(use-package helm-projectile
-  :ensure t)
-
-;; Which Key
-(use-package which-key
-  :ensure t
-  :init
-  (setq which-key-separator " ")
-  (setq which-key-prefix-prefix "+")
+  :diminish
+  :custom
+  (projectile-completion-system 'ivy)
+  (projectile-switch-project-action #'projectile-dired)
+  (projectile-auto-discover nil)
+  (projectile-track-known-projects-automatically nil)
   :config
-  (which-key-mode))
+  (projectile-mode))
 
-(use-package blacken
-  :ensure t
-  :init
-  (setq blacken-allow-py36 t)
-  (setq blacken-line-length 95))
+(use-package format-all
+  :commands format-all-buffer
+  :config
+  (setq-default format-all-formatters '(("Python" isort black)))
+  (define-format-all-formatter isort
+    (:executable "isort")
+    (:install)
+    (:languages "Python")
+    (:format (format-all--buffer-easy executable  "-"))))
 
-(use-package py-yapf
-  :ensure t)
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :custom
+  (lsp-keymap-prefix "C-c l")
+  :config
+  (lsp-enable-which-key-integration t)
+  :hook
+  (python-mode . lsp-deferred))
+
+(use-package lsp-pyright
+  :defer t
+  :custom
+  (lsp-pyright-disable-language-service nil)
+  (lsp-pyright-disable-organize-imports t)
+  (lsp-pyright-auto-import-completions t)
+  (lsp-pyright-use-library-code-for-types t)
+  ;; (lsp-pyright-venv-path "~/.cache/pypoetry/virtualenvs/querysmith-NuXvAkrf-py3.7")
+  :hook
+  ((python-mode . (lambda () (require 'lsp-pyright) (lsp-deferred)))))
+
+(use-package pyvenv
+  :defer nil)
+
+;; :hook
+;; ((python-mode . (lambda () (message lsp-pyright-venv-path)))))
+
+
+(use-package scala-mode
+  :interpreter ("scala" . scala-mode))
+
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :custom
+  (sbt:program-options '("-Dsbt.supershell=false")))
+
+(use-package terraform-mode
+  :interpreter ("tf" . terraform-mode))
+
+(use-package lsp-metals
+  :defer t
+  :hook
+  ((scala-mode . (lambda () (require 'lsp-metals) (lsp-deferred)))))
 
 (use-package company
-  :ensure t
-  :config
-  (global-company-mode)
-  :bind (:map company-active-map
-	      ("C-n" . 'company-select-next-or-abort)
-	      ("C-p" . 'company-select-previous-or-abort)
-	      ("<tab>" . 'company-complete-selection)
-	      ("<return>" . nil))
-  :init
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1)
-  (setq company-selection-wrap-around t))
-
-
-(use-package company-jedi
-  :ensure t
-  :config
-  (add-to-list 'company-backends 'company-jedi))
-
-(use-package dockerfile-mode
-  :ensure t
-  :mode ("Dockerfile\\'" . dockerfile-mode))
-
-(use-package yaml-mode
-  :ensure t
-  :mode ("\\.yml\\'" . yaml-mode))
-
-(use-package markdown-mode
-  :ensure t
-  :mode (("README\\.md\\'" . markdown-mode)))
-
-  ;; (add-hook 'python-mode-hook '(add-to-list 'company-backends 'company-jedi)))
-
-;; Custom keybinding
-(use-package general
-  :ensure t
-  :config
-  (general-define-key
-    :states '(motion normal visual insert emacs)
-    :prefix "SPC"
-    :non-normal-prefix "M-SPC"
-    ;; "/"   '(counsel-rg :which-key "ripgrep") ; You'll need counsel package for this
-    "TAB" '(switch-to-prev-buffer :which-key "previous buffer")
-    "SPC" '(helm-M-x :which-key "M-x")
-    "pf"  '(helm-find-file :which-key "find files")
-    ;; Buffers
-    "bb"  '(helm-buffers-list :which-key "buffers list")
-    "bf"  '(py-yapf-buffer :which-key "format buffer")
-    "bn"  '(helm-find-files :which-key "new file")
-    "bm"  '(rename-file-and-buffer :which-key "move current file")
-    ;; Files
-    "ff"  '(helm-projectile-find-file :which-key "find file")
-    "fg"  '(helm-rg :which-key "RG")
-    ;; Window
-    "wl"  '(windmove-right :which-key "move right")
-    "wh"  '(windmove-left :which-key "move left")
-    "wk"  '(windmove-up :which-key "move up")
-    "wj"  '(windmove-down :which-key "move bottom")
-    "wn"  '(split-window-right :which-key "split right")
-    "wd"  '(delete-window :which-key "delete window")
-    ;; Git
-    "gs"  '(magit-status :which-key "git status")
-    "gl"  '(magit-log-all-branches :which-key "git log")
-    ;; Others
-    "at"  '(ansi-term :which-key "open terminal"))
-  (general-define-key
-    :states 'normal
-    "]c" '(git-gutter:next-hunk :which-key "next hunk")
-    "[c" '(git-gutter:previous-hunk :which-key "previous hunk"))
-)
-
-;; Backup files
-(setq backup-directory-alist `(("." . "~/.backup.emacs/")))
-(setq backup-by-copying t)
-
-
-
-
-
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("8d5f22f7dfd3b2e4fc2f2da46ee71065a9474d0ac726b98f647bc3c7e39f2819" "b59d7adea7873d58160d368d42828e7ac670340f11f36f67fa8071dbf957236a" default)))
- '(package-selected-packages (quote (yaml-mode use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind
+  (:map company-active-map
+        ("<tab>" . company-complete-selection)
+	("<enter>" . company-complete-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0)
+  (company-selection-default 0))

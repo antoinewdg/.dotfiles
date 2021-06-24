@@ -1,3 +1,4 @@
 .metals
 .dir-locals.el
 .idea/
+.vscode/
