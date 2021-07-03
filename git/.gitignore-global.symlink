@@ -2,3 +2,6 @@
 .dir-locals.el
 .idea/
 .vscode/
+.projectile
+metals.sbt
+.bloop/

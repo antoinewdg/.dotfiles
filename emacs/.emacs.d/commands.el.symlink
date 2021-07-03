@@ -1,0 +1,75 @@
+(defun toto/edit-emacs-config ()
+  (interactive)
+  (find-file (expand-file-name "~/.emacs.d/init.el")))
+
+(defun toto/reload-init-file ()
+  (interactive)
+  (load user-init-file))
+
+(defun toto/delete-window ()
+  (interactive)
+  (delete-window)
+  (balance-windows))
+
+(defun toto/split-window-right-and-move ()
+  (interactive)
+  (split-window-right)
+  (windmove-right)
+  (balance-windows))
+
+(defun toto/open-messages-buffer ()
+  (interactive)
+  (switch-to-buffer "*Messages*"))
+
+(defun toto/switch-buffer-ignore-special ()
+  (interactive)
+  (let ((ivy-ignore-buffers (append ivy-ignore-buffers `("^\*"))))
+    (ivy-switch-buffer)))
+
+(defun toto/format-buffer ()
+  (interactive)
+  (cl-case major-mode
+    ('emacs-lisp-mode (message "Hello") (format-all-buffer))
+    ('scala-mode (lsp-format-buffer))
+    ('python-mode (format-all-buffer))))
+
+(defun toto/sbt/get-testonly-file (&optional file)
+  "Return FILE formatted in a sbt testOnly command."
+  (--> (or file (file-name-base))
+    (format "testOnly *%s" it)))
+
+(defun toto/sbt/run-test-file (&optional file)
+  (interactive)
+  (sbt-command (toto/sbt/get-testonly-file file)))
+
+(defun toto/sbt/get-testcase-name ()
+  "Get Scala test case nearby point."
+  (save-excursion
+    (let* ((line (thing-at-point 'line t))
+           (on-testcase-p (and (s-contains? "\"" line)
+                               (s-contains? "{\n" line)))
+           (get-testcase-name (lambda (l)
+                                (--> l
+                                  (s-split "\"" it)
+                                  reverse
+				  (cdr it)
+				  reverse
+				  cdr
+				  (string-join it "")))))
+      (if on-testcase-p
+          (funcall get-testcase-name line)
+        (progn
+          (search-backward "{\n")
+          (funcall get-testcase-name (thing-at-point 'line t)))))))
+
+(defun toto/sbt/run-testcase-at-point ()
+  "Run Scala test case at point."
+  (interactive)
+  (--> (toto/sbt/get-testonly-file)
+    (format "%s -- -z \"%s\"" it (toto/sbt/get-testcase-name))
+    sbt-command))
+
+
+(defun toto/run-test-at-point ()
+  (interactive)
+  (toto/sbt/run-testcase-at-point))
