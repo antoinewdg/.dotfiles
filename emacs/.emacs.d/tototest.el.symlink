@@ -1,0 +1,70 @@
+(defcustom tototest/test-at-point-function nil "")
+(defcustom tototest/python-unittest-command "python -m unittest" "")
+
+(defun tototest/run-previous-test ()
+  (interactive)
+  (if (equal tototest/test-at-point-function 'tototest/scala-sbt-test-at-point)
+      (sbt-run-previous-command)
+    (let* ((compilation-read-command nil))
+      (projectile-test-project nil))))
+
+(defun tototest/run-test-case-at-point ()
+  (interactive)
+  (funcall (symbol-function tototest/test-at-point-function) nil))
+
+(defun tototest/run-test-class-at-point ()
+  (interactive)
+  (funcall (symbol-function tototest/test-at-point-function) t))
+
+
+(defun tototest/scala-sbt-test-at-point (class-only)
+
+  (let* ((current-class nil)
+	 (current-case nil)
+	 (current-package nil)
+	 (class-rx (rx "class " (group (one-or-more word))))
+	 (case-rx (rx
+		   "\""
+		   (group (one-or-more not-newline))
+		   "\" should \""
+		   (group (one-or-more not-newline))
+		   "\""))
+	 (package-rx (rx "package " (group (one-or-more any)))))
+
+    (save-excursion
+      (when (re-search-backward case-rx)
+	(setq current-case (match-string 1)))
+      (when (re-search-backward class-rx)
+	(setq current-class (match-string 1)))
+      (when (re-search-backward package-rx)
+	(setq current-package (match-string 1))))
+
+    (let* ((command (if class-only
+			(format "testOnly %s.%s" current-package current-class)
+		      (format "testOnly %s.%s -- -z \"%s\"" current-package current-class current-case))))
+      (sbt-command command))))
+
+
+(defun tototest/python-unittest-at-point (class-only)
+  (let* ((current-class nil)
+	 (current-case nil)
+	 (class-rx (rx "class " (group (one-or-more word))))
+	 (case-rx (rx "    def " (group (one-or-more (or "_" word))))))
+
+    (save-excursion
+      (when (re-search-backward case-rx)
+	(setq current-case (match-string 1)))
+      (when (re-search-backward class-rx)
+	(setq current-class (match-string 1))))
+
+    (let* ((args (if class-only
+		     (format "-k %s" current-class)
+		   (format "-k %s.%s" current-class current-case)))
+	   (command (format "%s %s" tototest/python-unittest-command args)))
+      (tototest/run-projectile-test-cmd-no-prompt command))))
+
+
+(defun tototest/run-projectile-test-cmd-no-prompt (command)
+  (let* ((compilation-read-command nil))
+    (projectile--run-project-cmd command projectile-test-cmd-map
+                                 :save-buffers t)))

@@ -3,6 +3,7 @@
 
 (load-user-file "setup.el")
 (load-user-file "commands.el")
+(load-user-file "tototest.el")
 
 
 ;; General
@@ -58,6 +59,8 @@
 (use-package general
   :config
   (general-define-key
+   "M-c" 'eval-expression)
+  (general-define-key
    :keymaps 'transient-base-map
    "<escape>" 'transient-quit-one)
   (general-define-key
@@ -74,16 +77,20 @@
    "p a" 'projectile-add-known-project
    "p D" 'projectile-remove-known-project
    ;; Buffers
+   "b k" 'kill-current-buffer
    "b f" 'toto/format-buffer
    "b b" 'toto/switch-buffer-ignore-special
    "b B" 'ivy-switch-buffer
    "b p" 'switch-to-prev-buffer
    "b m" 'toto/open-messages-buffer
+   "b D" 'toto/delete-current-file-and-buffer
    ;; Editor
    "e e" 'toto/reload-init-file
    "e c" 'toto/edit-emacs-config
    ;; Tests
-   "t t" 'toto/run-test-at-point
+   "t t" 'tototest/run-previous-test
+   "t p" 'tototest/run-test-case-at-point
+   "t c" 'tototest/run-test-class-at-point
    ;; Windows
    "w h" 'windmove-left
    "w l" 'windmove-right
@@ -91,7 +98,8 @@
    "w n" 'toto/split-window-right-and-move
    ;; Code
    "c d" 'lsp-find-definition
-   "c r" 'lsp-find-references
+   "c r" 'lsp-rename
+   "c f" 'lsp-find-references
    ))
 
 
@@ -130,7 +138,7 @@
   :diminish
   :custom
   (projectile-completion-system 'ivy)
-  (projectile-switch-project-action #'projectile-dired)
+  ;; (projectile-switch-project-action #'projectile-dired)
   (projectile-auto-discover nil)
   (projectile-track-known-projects-automatically nil)
   :config
@@ -186,7 +194,7 @@
   :hook
   (python-mode . lsp-deferred))
 
-;; Python LSP 
+;; Python LSP
 (use-package lsp-pyright
   :defer t
   :custom
@@ -194,7 +202,6 @@
   (lsp-pyright-disable-organize-imports t)
   (lsp-pyright-auto-import-completions t)
   (lsp-pyright-use-library-code-for-types t)
-  ;; (lsp-pyright-venv-path "~/.cache/pypoetry/virtualenvs/querysmith-NuXvAkrf-py3.7")
   :hook
   ((python-mode . (lambda () (require 'lsp-pyright) (lsp-deferred)))))
 
