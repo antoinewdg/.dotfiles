@@ -1,0 +1,12 @@
+vim.cmd 'packadd paq-nvim'
+local paq = require('paq-nvim').paq
+
+require("toto.looks").setup(paq)
+require("toto.general").setup(paq)
+
+
+
+
+
+
+

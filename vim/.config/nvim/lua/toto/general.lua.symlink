@@ -1,0 +1,160 @@
+local helpers = require("toto.helpers")
+local opt = vim.opt
+
+local M = {}
+
+function M.setup(paq)
+
+  opt.completeopt = "menuone,noselect,preview"  -- Completion options (for deoplete)
+  opt.expandtab = true                  -- Use spaces instead of tabs
+  opt.hidden = true                     -- Enable background buffers
+  opt.ignorecase = true                 -- Ignore case
+  opt.joinspaces = false                -- No double spaces with join
+  opt.list = true                       -- Show some invisible characters
+  opt.scrolloff = 4                     -- Lines of context
+  opt.shiftround = true                 -- Round indent
+  opt.shiftwidth = 2                    -- Size of an indent
+  opt.sidescrolloff = 8                 -- Columns of context
+  opt.smartcase = true                  -- Do not ignore case with capitals
+  opt.smartindent = true                -- Insert indents automatically
+  opt.splitbelow = true                 -- Put new windows below current
+  opt.splitright = true                 -- Put new windows right of current
+  opt.tabstop = 2                       -- Number of spaces tabs count for
+  opt.wildmode = {'list', 'longest'}    -- Command-line completion mode
+  opt.wrap = false                      -- Disable line wrap
+  opt.inccommand = 'nosplit'            -- Live substitution for search
+  opt.autowriteall = true               -- Save on buffer switch
+
+  paq {'savq/paq-nvim', opt = true}    -- paq-nvim manages itself
+  -- Utility libs
+  paq {'nvim-lua/plenary.nvim'}
+  paq {'kyazdani42/nvim-web-devicons'}
+  paq {'nvim-lua/popup.nvim'}
+  paq {'svermeulen/vimpeccable'}
+  -- IDE
+  paq {'nvim-treesitter/nvim-treesitter'}
+  paq {'neovim/nvim-lspconfig'}
+  paq {'lukas-reineke/format.nvim'}
+  paq {'nvim-telescope/telescope.nvim'}
+  paq {'windwp/nvim-spectre'}
+  paq {'hrsh7th/nvim-compe'}
+
+  setup_keymaps()
+
+  autocmds = {
+    format = {"BufWritePost * FormatWrite"},
+    focus = {'FocusLost * silent! wa'},
+    yank = {'TextYankPost * lua vim.highlight.on_yank {on_visual = false}'}  -- disabled in visual mode
+  }
+  helpers.create_augroups(autocmds)
+
+  require('nvim-treesitter.configs').setup {
+    ensure_installed = 'maintained',
+    highlight = {enable = true}
+  }
+
+  local lsp = require('lspconfig')
+  lsp.pyright.setup {}
+
+  require("format").setup {
+    ["*"] = {
+      {cmd = {"sed -i 's/[ \t]*$//'"}} -- remove trailing whitespace
+    },
+    python = {
+      {
+        cmd = {"black", "isort"},
+      }
+    },
+    lua = {
+      {
+        cmd = {
+          function(file)
+            return string.format("luafmt -l %s -w replace %s", vim.bo.textwidth, file)
+          end
+        }
+      }
+    },
+  }
+
+
+  local actions = require('telescope.actions')
+  require('telescope').setup {
+    defaults = {
+      mappings = {
+        i = {
+          ["<C-j>"] = actions.move_selection_next,
+          ["<C-k>"] = actions.move_selection_previous,
+        }
+      }
+    }
+  }
+
+  require("compe").setup {
+    enabled = true,
+    autocomplete = true,
+    debug = false,
+    min_length = 1,
+    preselect = 'enable',
+    throttle_time = 80,
+
+    documentation = true,
+
+    source = {
+      path = true,
+      buffer = true,
+      calc = true,
+      nvim_lsp = true,
+      nvim_lua = true,
+      vsnip = true,
+      ultisnips = true,
+      luasnip = true,
+    },
+  }
+
+end
+
+function setup_keymaps()
+  local vimp = require('vimp')
+  local telescope = require("telescope.builtin")
+
+  vimp.add_chord_cancellations('n', '<space>')
+  vimp.bind('i', '<C-j>', '<C-n>')
+  vimp.bind('i', '<C-k>', '<C-p>')
+  -- Editor
+  vimp.bind('n', '<space>ee', helpers.reload_config)
+  vimp.bind('n', '<space>ec', ':e '.. vim.fn.stdpath('config') .. '/init.lua<CR>')
+  -- Windows
+  vimp.bind('n', '<space>wh', '<C-w>h')
+  vimp.bind('n', '<space>wj', '<C-w>j')
+  vimp.bind('n', '<space>wk', '<C-w>k')
+  vimp.bind('n', '<space>wl', '<C-w>l')
+  vimp.bind('n', '<space>wd', '<C-w>c')
+  vimp.bind('n', '<space>wn', ':vsplit<CR>')
+  -- Code
+  vimp.bind('n', '<space>ca', vim.lsp.buf.code_action)
+  vimp.bind('n', '<space>cd', vim.lsp.buf.definition)
+  vimp.bind('n', '<space>bf', format_current_file)
+  vimp.bind('n', '<space>h', vim.lsp.buf.hover)
+  vimp.bind('n', '<space>cr', vim.lsp.buf.rename)
+  -- Telescope
+  vimp.bind('n', '<space>pf', telescope.find_files)
+  vimp.bind('n', '<space>ph', telescope.help_tags)
+  vimp.bind('n', '<space>ps', telescope.live_grep)
+  vimp.bind('n', '<space>bb', telescope.buffers)
+  vimp.bind('n', '<space>fr', telescope.oldfiles)
+  vimp.bind('n', '<space>cf', telescope.lsp_references)
+  -- Other
+  vimp.bind('n', '<space>j', vim.lsp.diagnostic.goto_prev)
+  vimp.bind('n', '<space>k', vim.lsp.diagnostic.goto_next)
+  vimp.bind('n', '<space>s', vim.lsp.buf.document_symbol)
+
+end
+
+function format_current_file()
+  vim.cmd ':w'
+  if vim.bo.filetype ~= "scala" then
+     vim.cmd 'FormatWrite'
+  end
+end
+
+return M
