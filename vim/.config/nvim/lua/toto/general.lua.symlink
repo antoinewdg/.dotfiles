@@ -25,6 +25,9 @@ function M.setup(paq)
   opt.inccommand = 'nosplit'            -- Live substitution for search
   opt.autowriteall = true               -- Save on buffer switch
 
+  -- Apparently required for metals
+  vim.opt_global.shortmess:remove("F"):append("c")
+
   paq {'savq/paq-nvim', opt = true}    -- paq-nvim manages itself
   -- Utility libs
   paq {'nvim-lua/plenary.nvim'}
@@ -38,13 +41,15 @@ function M.setup(paq)
   paq {'nvim-telescope/telescope.nvim'}
   paq {'windwp/nvim-spectre'}
   paq {'hrsh7th/nvim-compe'}
+  paq {'scalameta/nvim-metals'}
 
   setup_keymaps()
 
   autocmds = {
     format = {"BufWritePost * FormatWrite"},
     focus = {'FocusLost * silent! wa'},
-    yank = {'TextYankPost * lua vim.highlight.on_yank {on_visual = false}'}  -- disabled in visual mode
+    yank = {'TextYankPost * lua vim.highlight.on_yank {on_visual = false}'},  -- disabled in visual mode
+    lsp = {'FileType scala,sbt lua require("metals").initialize_or_attach({})'},
   }
   helpers.create_augroups(autocmds)
 
@@ -152,7 +157,9 @@ end
 
 function format_current_file()
   vim.cmd ':w'
-  if vim.bo.filetype ~= "scala" then
+  if vim.bo.filetype == "scala" then
+    vim.lsp.buf.formatting()
+  else
      vim.cmd 'FormatWrite'
   end
 end
