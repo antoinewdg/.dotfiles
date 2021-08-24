@@ -42,11 +42,12 @@ function M.setup(paq)
   paq {'windwp/nvim-spectre'}
   paq {'hrsh7th/nvim-compe'}
   paq {'scalameta/nvim-metals'}
+  paq {'terrortylor/nvim-comment'}
 
   setup_keymaps()
 
   autocmds = {
-    format = {"BufWritePost * FormatWrite"},
+    format = {"BufWritePost * lua format_current_file()"},
     focus = {'FocusLost * silent! wa'},
     yank = {'TextYankPost * lua vim.highlight.on_yank {on_visual = false}'},  -- disabled in visual mode
     lsp = {'FileType scala,sbt lua require("metals").initialize_or_attach({})'},
@@ -60,6 +61,9 @@ function M.setup(paq)
 
   local lsp = require('lspconfig')
   lsp.pyright.setup {}
+  lsp.rust_analyzer.setup({})
+
+  require("nvim_comment").setup {}
 
   require("format").setup {
     ["*"] = {
@@ -123,8 +127,14 @@ function setup_keymaps()
   local telescope = require("telescope.builtin")
 
   vimp.add_chord_cancellations('n', '<space>')
+  -- Completion
   vimp.bind('i', '<C-j>', '<C-n>')
   vimp.bind('i', '<C-k>', '<C-p>')
+  vimp.bind('i', {'expr'}, '<CR>', 'compe#confirm("<CR>")')
+
+  -- Dumb stuff
+  vimp.bind('n', ':W', ':w')
+  vimp.bind('n', 'y', '"+y') -- Always yank to the system clipboard
   -- Editor
   vimp.bind('n', '<space>ee', helpers.reload_config)
   vimp.bind('n', '<space>ec', ':e '.. vim.fn.stdpath('config') .. '/init.lua<CR>')
@@ -142,23 +152,27 @@ function setup_keymaps()
   vimp.bind('n', '<space>h', vim.lsp.buf.hover)
   vimp.bind('n', '<space>cr', vim.lsp.buf.rename)
   -- Telescope
-  vimp.bind('n', '<space>pf', telescope.find_files)
+  vimp.bind('n', '<space>pf', function ()
+    telescope.find_files({ find_command = {"rg", "--ignore", "--hidden", "--files", "--glob=!.git/**/*"} })
+  end)
   vimp.bind('n', '<space>ph', telescope.help_tags)
   vimp.bind('n', '<space>ps', telescope.live_grep)
   vimp.bind('n', '<space>bb', telescope.buffers)
   vimp.bind('n', '<space>fr', telescope.oldfiles)
   vimp.bind('n', '<space>cf', telescope.lsp_references)
   -- Other
+  vimp.bind('n', '<space>bp', ':ls<cr>:b<space>')
   vimp.bind('n', '<space>j', vim.lsp.diagnostic.goto_prev)
   vimp.bind('n', '<space>k', vim.lsp.diagnostic.goto_next)
   vimp.bind('n', '<space>s', vim.lsp.buf.document_symbol)
 
 end
 
-function format_current_file()
+function _G.format_current_file()
   vim.cmd ':w'
   if vim.bo.filetype == "scala" then
     vim.lsp.buf.formatting()
+    vim.cmd ':w'
   else
      vim.cmd 'FormatWrite'
   end
