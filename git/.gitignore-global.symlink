@@ -5,3 +5,5 @@
 .projectile
 metals.sbt
 .bloop/
+.envrc
+.venv_path

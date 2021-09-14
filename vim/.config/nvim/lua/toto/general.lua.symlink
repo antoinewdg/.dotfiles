@@ -21,7 +21,7 @@ function M.setup(paq)
   opt.splitright = true                 -- Put new windows right of current
   opt.tabstop = 2                       -- Number of spaces tabs count for
   opt.wildmode = {'list', 'longest'}    -- Command-line completion mode
-  opt.wrap = false                      -- Disable line wrap
+  opt.wrap = true                      -- Disable line wrap
   opt.inccommand = 'nosplit'            -- Live substitution for search
   opt.autowriteall = true               -- Save on buffer switch
 
@@ -62,6 +62,7 @@ function M.setup(paq)
   local lsp = require('lspconfig')
   lsp.pyright.setup {}
   lsp.rust_analyzer.setup({})
+  lsp.terraformls.setup({})
 
   require("nvim_comment").setup {}
 
@@ -83,6 +84,11 @@ function M.setup(paq)
         }
       }
     },
+    terraform = {
+      {
+        cmd = {"terraform fmt"},
+      }
+    }
   }
 
 
@@ -132,6 +138,10 @@ function setup_keymaps()
   vimp.bind('i', '<C-k>', '<C-p>')
   vimp.bind('i', {'expr'}, '<CR>', 'compe#confirm("<CR>")')
 
+  -- Move correctly across wrapped lines (I can't believe I could not find a setting
+  -- for this).
+  vimp.rbind('nx', 'j', 'gj')
+  vimp.rbind('nx', 'k', 'gk')
   -- Dumb stuff
   vimp.bind('n', ':W', ':w')
   vimp.bind('n', 'y', '"+y') -- Always yank to the system clipboard
@@ -150,6 +160,7 @@ function setup_keymaps()
   vimp.bind('n', '<space>cd', vim.lsp.buf.definition)
   vimp.bind('n', '<space>bf', format_current_file)
   vimp.bind('n', '<space>h', vim.lsp.buf.hover)
+  vimp.bind('n', '<C-h>', vim.lsp.diagnostic.show_line_diagnostics)
   vimp.bind('n', '<space>cr', vim.lsp.buf.rename)
   -- Telescope
   vimp.bind('n', '<space>pf', function ()
