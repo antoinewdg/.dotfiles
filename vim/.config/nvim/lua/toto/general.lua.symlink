@@ -21,7 +21,8 @@ function M.setup(paq)
   opt.splitright = true                 -- Put new windows right of current
   opt.tabstop = 2                       -- Number of spaces tabs count for
   opt.wildmode = {'list', 'longest'}    -- Command-line completion mode
-  opt.wrap = true                      -- Disable line wrap
+  opt.wrap = true                       -- Enable soft wrap
+  opt.linebreak = true                  -- Don't soft wrap in the middle of words
   opt.inccommand = 'nosplit'            -- Live substitution for search
   opt.autowriteall = true               -- Save on buffer switch
 
@@ -60,6 +61,8 @@ function M.setup(paq)
     ensure_installed = 'maintained',
     highlight = {enable = true}
   }
+
+  vim.g['goyo_width'] = 90
 
   local lsp = require('lspconfig')
   lsp.pyright.setup {}
