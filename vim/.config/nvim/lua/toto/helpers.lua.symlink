@@ -35,5 +35,12 @@ function M.reload_config()
   print("Reloaded vimrc!")
 end
 
+function M.remove_current_file()
+  local path = vim.fn.expand("%")
+  if vim.fn.input("Remove " .. path .. "? (y/n) ") == "y" then
+    vim.fn.delete(path)
+    vim.cmd(":bdelete!")
+  end
+end
 
 return M

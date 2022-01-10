@@ -43,6 +43,8 @@ function M.setup(paq)
   paq {'hrsh7th/nvim-compe'}
   paq {'scalameta/nvim-metals'}
   paq {'terrortylor/nvim-comment'}
+  -- Focused window for markdown editing
+  paq {'junegunn/goyo.vim'}
 
   setup_keymaps()
 
@@ -166,6 +168,8 @@ function setup_keymaps()
   vimp.bind('n', '<space>pf', function ()
     telescope.find_files({ find_command = {"rg", "--ignore", "--hidden", "--files", "--glob=!.git/**/*"} })
   end)
+  vimp.bind('n', '<space>bD', helpers.remove_current_file)
+
   vimp.bind('n', '<space>ph', telescope.help_tags)
   vimp.bind('n', '<space>ps', telescope.live_grep)
   vimp.bind('n', '<space>bb', telescope.buffers)
