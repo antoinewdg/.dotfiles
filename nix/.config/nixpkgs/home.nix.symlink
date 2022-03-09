@@ -10,6 +10,7 @@
       pkgs.exa
       pkgs.bat
       pkgs.direnv
+      pkgs.starship
   ];
 
   # Home Manager needs a bit of information about you and the

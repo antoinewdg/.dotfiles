@@ -184,6 +184,9 @@ function setup_keymaps()
   vimp.bind('n', '<space>k', vim.lsp.diagnostic.goto_next)
   vimp.bind('n', '<space>s', vim.lsp.buf.document_symbol)
 
+  -- Disable ex mode
+  vimp.bind('n', 'Q', '<Nop>')
+
 end
 
 function _G.format_current_file()

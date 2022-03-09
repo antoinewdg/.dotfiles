@@ -147,7 +147,7 @@ workspace 10 output DP-1
 
 exec --no-startup-id dbus-launch dropbox start
 exec --no-startup-id redshift-gtk
-exec --no-startup-id feh --bg-scale ~/Pictures/rick.png
+exec --no-startup-id feh --bg-scale ~/.dotfiles/assets/rick.png
 exec "numlockx"
 exec --no-startup-id megasync
 exec --no-startup-id nm-applet
