@@ -5,7 +5,6 @@
   programs.home-manager.enable = true;
   home.packages = [
       pkgs.nushell
-      pkgs.git
       pkgs.ripgrep
       pkgs.exa
       pkgs.bat
