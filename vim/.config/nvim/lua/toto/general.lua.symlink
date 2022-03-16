@@ -66,8 +66,9 @@ function M.setup(paq)
 
   local lsp = require('lspconfig')
   lsp.pyright.setup {}
-  lsp.rust_analyzer.setup({})
-  lsp.terraformls.setup({})
+  lsp.rust_analyzer.setup {}
+  lsp.terraformls.setup {}
+  lsp.tsserver.setup {}
 
   require("nvim_comment").setup {}
 
