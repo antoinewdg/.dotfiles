@@ -5,7 +5,7 @@
     "workbench.colorCustomizations": {
         "statusBar.background": "#1b7898",
     },
-    "editor.fontFamily": "Hack",
+    "editor.fontFamily": "iosevka",
     "editor.fontSize": 13,
     "vim.leader": "<space>",
     "vim.handleKeys": {
@@ -13,60 +13,144 @@
     },
     "vim.normalModeKeyBindingsNonRecursive": [
         {
-            "before": [ "<leader>", "f", "f" ],
-            "commands": [ "workbench.action.quickOpen" ]
+            "before": [
+                "<leader>",
+                "f",
+                "f"
+            ],
+            "commands": [
+                "workbench.action.quickOpen"
+            ]
         },
         {
-            "before": [ "<leader>", "b", "f" ],
-            "commands": [ "editor.action.formatDocument" ]
+            "before": [
+                "<leader>",
+                "b",
+                "f"
+            ],
+            "commands": [
+                "editor.action.formatDocument"
+            ]
         },
         {
-            "before": [ "<leader>", "b", "m" ],
-            "commands": [ "fileutils.moveFile" ]
+            "before": [
+                "<leader>",
+                "b",
+                "m"
+            ],
+            "commands": [
+                "fileutils.moveFile"
+            ]
         },
         {
-            "before": [ "<leader>", "b", "n" ],
-            "commands": [ "fileutils.newFile" ]
+            "before": [
+                "<leader>",
+                "b",
+                "n"
+            ],
+            "commands": [
+                "fileutils.newFile"
+            ]
         },
         {
-            "before": [ "<leader>", "b", "D" ],
-            "commands": [ "fileutils.removeFile" ]
+            "before": [
+                "<leader>",
+                "b",
+                "D"
+            ],
+            "commands": [
+                "fileutils.removeFile"
+            ]
         },
         {
-            "before": [ "<leader>", "w", "n" ],
-            "commands": [ "workbench.action.splitEditor" ]
+            "before": [
+                "<leader>",
+                "w",
+                "n"
+            ],
+            "commands": [
+                "workbench.action.splitEditor"
+            ]
         },
         {
-            "before": [ "<leader>", "w", "h" ],
-            "commands": [ "workbench.action.focusLeftGroup" ]
+            "before": [
+                "<leader>",
+                "w",
+                "h"
+            ],
+            "commands": [
+                "workbench.action.focusLeftGroup"
+            ]
         },
         {
-            "before": [ "<leader>", "w", "l" ],
-            "commands": [ "workbench.action.focusRightGroup" ]
+            "before": [
+                "<leader>",
+                "w",
+                "l"
+            ],
+            "commands": [
+                "workbench.action.focusRightGroup"
+            ]
         },
         {
-            "before": [ "<leader>", "w", "d" ],
-            "commands": [ "workbench.action.closeEditorsInGroup" ]
+            "before": [
+                "<leader>",
+                "w",
+                "d"
+            ],
+            "commands": [
+                "workbench.action.closeEditorsInGroup"
+            ]
         },
         {
-            "before": [ "<leader>", "c", "t" ],
-            "commands": [ "editor.action.peekTypeDefinition" ]
+            "before": [
+                "<leader>",
+                "c",
+                "t"
+            ],
+            "commands": [
+                "editor.action.peekTypeDefinition"
+            ]
         },
         {
-            "before": [ "<leader>", "c", "f" ],
-            "commands": [ "editor.action.openDeclarationToTheSide" ]
+            "before": [
+                "<leader>",
+                "c",
+                "f"
+            ],
+            "commands": [
+                "editor.action.openDeclarationToTheSide"
+            ]
         },
         {
-            "before": [ "<leader>", "c", "d" ],
-            "commands": [ "editor.action.goToDeclaration" ]
+            "before": [
+                "<leader>",
+                "c",
+                "d"
+            ],
+            "commands": [
+                "editor.action.goToDeclaration"
+            ]
         },
         {
-            "before": [ "<leader>", "c", "u" ],
-            "commands": [ "editor.action.referenceSearch.trigger" ]
+            "before": [
+                "<leader>",
+                "c",
+                "u"
+            ],
+            "commands": [
+                "editor.action.referenceSearch.trigger"
+            ]
         },
         {
-            "before": [ "<leader>", "c", "r" ],
-            "commands": [ "editor.action.rename" ]
+            "before": [
+                "<leader>",
+                "c",
+                "r"
+            ],
+            "commands": [
+                "editor.action.rename"
+            ]
         },
     ],
     "workbench.editor.showTabs": false,
@@ -86,5 +170,8 @@
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-    "editor.autoClosingBrackets": "never"
+    "editor.autoClosingBrackets": "never",
+    "vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim",
+    "python.languageServer": "Pylance",
+    "files.autoSave": "onFocusChange"
 }
